@@ -4,6 +4,7 @@
 #include "VRCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/StaticMeshComponent.h"
 
 // Sets default values
 AVRCharacter::AVRCharacter()
