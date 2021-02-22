@@ -27,7 +27,9 @@ AVRCharacter::AVRCharacter()
 void AVRCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	DestinationMarker->SetVisibility(false);
+
 }
 
 // Called every frame
@@ -52,8 +54,15 @@ void AVRCharacter::UpdateDestinationMarker()
 
 	if (bHit)
 	{
+		DestinationMarker->SetVisibility(true);
 		DestinationMarker->SetWorldLocation(HitResult.Location);
 	}
+	else
+	{
+		DestinationMarker->SetVisibility(false);
+	}
+
+	//add more
 }
 
 // Called to bind functionality to input
@@ -64,6 +73,8 @@ void AVRCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 	PlayerInputComponent->BindAxis(TEXT("Forward"), this, &AVRCharacter::MoveForward);
 	PlayerInputComponent->BindAxis(TEXT("Right"), this, &AVRCharacter::MoveRight);
+	PlayerInputComponent->BindAction(TEXT("Teleport"), IE_Released, this, &AVRCharacter::BeginTeleport);
+
 }
 
 void AVRCharacter::MoveForward(float throttle) 
@@ -75,3 +86,9 @@ void AVRCharacter::MoveRight(float throttle)
 {
 	AddMovementInput(throttle * Camera->GetRightVector());
 }
+
+void AVRCharacter::BeginTeleport()
+{
+	SetActorLocation(DestinationMarker->GetComponentLocation());
+}// Fill out your copyright notice in the Description page of Project Settings.
+
