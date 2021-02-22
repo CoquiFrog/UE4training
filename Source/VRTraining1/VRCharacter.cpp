@@ -49,6 +49,7 @@ void AVRCharacter::UpdateDestinationMarker()
 {
 	FVector Start = Camera->GetComponentLocation();
 	FVector End = Start + Camera->GetForwardVector() * MaxTeleportDistance;
+
 	FHitResult HitResult;
 	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
 
@@ -89,6 +90,24 @@ void AVRCharacter::MoveRight(float throttle)
 
 void AVRCharacter::BeginTeleport()
 {
+	// APlayerController* PC = Cast<APlayerController>(GetController());
+	// if (PC != nullptr)
+	// {
+	//	PC->PlayerCameraManager->StartCameraFade(0, 1, TeleportFadeTime, FLinearColor::Black, false);
+	// }
+	// FTimerHandle Handle;
+	// GetWorldTimerManager().SetTimer(Handle, this, &AVRCharacter::FinishTeleport, TeleportFadeTime, false);
 	SetActorLocation(DestinationMarker->GetComponentLocation());
-}// Fill out your copyright notice in the Description page of Project Settings.
+}
+
+void AVRCharacter::FinishTeleport()
+{
+	// SetActorLocation(DestinationMarker->GetComponentLocation());
+
+	// APlayerController* PC = Cast<APlayerController>(GetController());
+	// if (PC != nullptr)
+	// {
+	// 	PC->PlayerCameraManager->StartCameraFade(1, 0, TeleportFadeTime, FLinearColor::Black, false);
+	// }
+}
 
