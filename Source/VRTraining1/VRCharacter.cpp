@@ -5,6 +5,9 @@
 #include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "TimerManager.h"
+#include "Components/CapsuleComponent.h"
+#include "NavigationSystem.h"
 
 // Sets default values
 AVRCharacter::AVRCharacter()
@@ -53,6 +56,9 @@ void AVRCharacter::UpdateDestinationMarker()
 	FHitResult HitResult;
 	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility);
 
+	FNavLocation NavLocation;
+	UNavigationSystemV1::GetCurrent(GetWorld())->ProjectPointToNavigation(HitResult.Location, NavLocation, TeleportProjectionExtent);
+
 	if (bHit)
 	{
 		DestinationMarker->SetVisibility(true);
@@ -90,24 +96,24 @@ void AVRCharacter::MoveRight(float throttle)
 
 void AVRCharacter::BeginTeleport()
 {
-	// APlayerController* PC = Cast<APlayerController>(GetController());
-	// if (PC != nullptr)
-	// {
-	//	PC->PlayerCameraManager->StartCameraFade(0, 1, TeleportFadeTime, FLinearColor::Black, false);
-	// }
-	// FTimerHandle Handle;
-	// GetWorldTimerManager().SetTimer(Handle, this, &AVRCharacter::FinishTeleport, TeleportFadeTime, false);
-	SetActorLocation(DestinationMarker->GetComponentLocation());
+	APlayerController* PC = Cast<APlayerController>(GetController());
+	if (PC != nullptr)
+	{
+		PC->PlayerCameraManager->StartCameraFade(0, 1, TeleportFadeTime, FLinearColor::Black, false);
+	}
+	FTimerHandle Handle;
+	GetWorldTimerManager().SetTimer(Handle, this, &AVRCharacter::FinishTeleport, TeleportFadeTime, false);
+	// SetActorLocation(DestinationMarker->GetComponentLocation());
 }
 
 void AVRCharacter::FinishTeleport()
 {
-	// SetActorLocation(DestinationMarker->GetComponentLocation());
+	SetActorLocation(DestinationMarker->GetComponentLocation() + GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
 
-	// APlayerController* PC = Cast<APlayerController>(GetController());
-	// if (PC != nullptr)
-	// {
-	// 	PC->PlayerCameraManager->StartCameraFade(1, 0, TeleportFadeTime, FLinearColor::Black, false);
-	// }
+	APlayerController* PC = Cast<APlayerController>(GetController());
+	if (PC != nullptr)
+	{
+	 	PC->PlayerCameraManager->StartCameraFade(1, 0, TeleportFadeTime, FLinearColor::Black, false);
+	}
 }
 
