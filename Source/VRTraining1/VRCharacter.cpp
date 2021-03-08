@@ -10,6 +10,7 @@
 #include "NavigationSystem.h"
 #include "Components/PostProcessComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "MotionControllerComponent.h"
 
 // Sets default values
 AVRCharacter::AVRCharacter()
@@ -23,11 +24,21 @@ AVRCharacter::AVRCharacter()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	Camera->SetupAttachment(VRRoot);
 
+	
+	LeftController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("LeftController"));
+	LeftController->SetupAttachment(VRRoot);
+	LeftController->SetTrackingSource(EControllerHand::Left);
+
+	RightController = CreateDefaultSubobject<UMotionControllerComponent>(TEXT("RightController"));
+	RightController->SetupAttachment(VRRoot);
+	RightController->SetTrackingSource(EControllerHand::Right);
+
 	DestinationMarker = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DestinationMarker"));
 	DestinationMarker->SetupAttachment(GetRootComponent());
 
 	PostProcessComponent = CreateDefaultSubobject<UPostProcessComponent>(TEXT("PostProcessComponent"));
 	PostProcessComponent->SetupAttachment(GetRootComponent());
+
 }
 
 // Called when the game starts or when spawned
